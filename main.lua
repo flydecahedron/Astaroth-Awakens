@@ -81,7 +81,7 @@ function love.load()
   ]] )
 	--gradient bar moves over background
 	-- use an offset variable against the y coord ?
-	shader = love.graphics.newShader(
+	shader3 = love.graphics.newShader(
   [[
     extern vec4 palette_colors[2]; // size of color palette (2 colors)
     extern number dt, quadX, quadY, quadW, quadH, tilesetW, tilesetH, offset;
@@ -93,22 +93,61 @@ function love.load()
       	return pixel;
       }
       if(pixel == vec4(1.0,0.0,1.0,1.0)){
-      	pixel = vec4(0.0,0.7,0.0,0.8);
 	  	number quadCoordX = (texture_coords.x * tilesetW - quadX) / quadW;
-	  	number factorX = quadCoordX + dt;
+	  	//number factorX = quadCoordX + dt;
 	  	number quadCoordY = (texture_coords.y * tilesetH - quadY) / quadH;
 	  	number factorY = (quadCoordY + 2) * dt;
-	  	//pixel.r = pixel.r + (average-pixel.r) * factorX;
-	  	pixel.g = pixel.g * factorX * factorY;
-	  	//pixel.b = pixel.b + (average-pixel.b) * factorX;
+	  	number centerY = quadH/2;
+	  	number gradientH = quadH/10;
+	  	if(quadCoordY>centerY){
+	  		if(quadCoordY<(centerY + gradientH)){
+	  			pixel.r = 0.0;
+			  	pixel.g = 1.0 - (quadCoordY) * dt;
+			  	pixel.b = 0.0;
+			  	//pixel.a = quadCoordX * dt;
+		      	return pixel;
+	  		}
+	  	}
+	  	pixel.r = 0.0;
+	  	pixel.g = 1.0 - (quadCoordY) * dt;
+	  	pixel.b = 0.0;
+	  	//pixel.a = quadCoordX * dt;
       	return pixel;
       }
       return pixel * color;
     }
   ]] )
-	--shader:send("quadW", tileW)
+
+		shader = love.graphics.newShader(
+  [[
+    extern vec4 palette_colors[2]; // size of color palette (2 colors)
+    extern number dt, quadX, quadY, quadW, quadH, tilesetW, tilesetH, offset;
+    vec4 effect( vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords ){
+      vec4 pixel = Texel(texture, texture_coords );//This is the current pixel color
+      vec2 quad_coords = vec2((texture_coords.x * tilesetW - quadX) / quadW,(texture_coords.y * tilesetH - quadY) / quadH);
+      if(pixel == vec4(1.0,1.0,1.0,1.0)){
+      	//pixel = vec4(1.0,0.0,0.0,1.0);
+      	return pixel;
+      }
+      if(pixel == vec4(1.0,0.0,1.0,1.0)){
+	  	//number quadCoordX = (texture_coords.x * tilesetW - quadX) / quadW;
+	  	//number factorX = quadCoordX + dt;
+	  	//number quadCoordY = (texture_coords.y * tilesetH - quadY) / quadH;
+	  	//number factorY = (quadCoordY + 2) * dt;
+	  	//vec2 quadCenter = vec2((quadW/2 - quadX)/tilesetW,((tilesetH - quadY) / quadH)/2);
+	  	vec2 quadCenter = vec2(0.5,0.5);
+	  	vec2 quadDistance = (quad_coords - quadCenter);
+	  	number green = 0.7 - length(quadDistance);
+	  	number red = 0.7- length(quadDistance);
+	  	pixel = vec4(red,green,0.0,0.8 * (dt));
+      	return pixel;
+      }
+      return pixel * color;
+    }
+  ]] )
+	shader:send("quadW", tileW)
 	shader:send("quadH", tileH)
-	--shader:send("tilesetW", tilesetW)
+	shader:send("tilesetW", tilesetW)
 	shader:send("tilesetH", tilesetH)
 	time = 0
 	time0 = 1
@@ -148,7 +187,7 @@ function love.draw()
 		local row = tileTable[rowIndex]
 		for columnIndex=1, #row do
 			local number = row[columnIndex]
-			--shader:send("quadX", tiles[number][2])
+			shader:send("quadX", tiles[number][2])
 			shader:send("quadY", tiles[number][3])
 			love.graphics.draw(Tileset, tiles[number][1], (columnIndex-1)*tileW, (rowIndex-1)*tileH)
 		end
