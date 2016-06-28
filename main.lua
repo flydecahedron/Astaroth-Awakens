@@ -1,27 +1,15 @@
 -- load libs
 
 -- load assets
---local tiles = require "tileset"
-
+--local tiles1 = require "tileset"
+local tileset = require "tileset"
 -- load shader
 function love.load()
 	--camera = Camera(0, 0)
 
 	--tileset initialization
-	Tileset = love.graphics.newImage("assets/tileset.png")
-	tileW, tileH = 24, 24
-	tilesetW, tilesetH = Tileset:getWidth(), Tileset:getHeight()
-	local count = 1
-	tiles={}
-	for j = 1, 10 do
-		for i = 1, 16 do
-			tiles[count]={}
-			tiles[count][1] = love.graphics.newQuad((i-1)*tileW, (j-1)*tileH, tileW, tileH, tilesetW, tilesetH)
-			tiles[count][2] = (i-1)*tileW
-			tiles[count][3] = (j-1)*tileH
-			count = count + 1
-		end
-	end
+	local tiles = {}
+	tiles = tileset.load()
 	tileTable = {
 	{1,2,3,45,23,78,23,54,65,32},
 	{4,5,6},
