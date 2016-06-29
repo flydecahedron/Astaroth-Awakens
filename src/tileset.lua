@@ -1,18 +1,19 @@
 local tileset = {}
 --default values for the tileset
-tileset["image"] = love.graphics.newImage("assets/tileset.png")
-tileset["tileW"] = 24
-tileset["tileH"] = 24
 function tileset.load(image, tileW, tileH)
-	Tileset = love.graphics.newImage("assets/tileset.png")
-	local tileW, tileH = 24, 24
-	local tilesetW, tilesetH = Tileset:getWidth(), Tileset:getHeight()
+	local tilesetW, tilesetH = image:getWidth(), image:getHeight()
 	local count = 1
+	tileset.image = image
+	tileset.tileW = tileW
+	tileset.tileH = tileH
 	local tiles = {}
-	tiles["tileW"] = tileW
-	tiles["tileH"] = tileH
-	tiles["tilesetW"] = tilesetW
-	tiles["tilesetH"] = tilesetH
+	tiles.image = image
+	tiles.tileW = tileW
+	tiles.tileH = tileH
+	tiles.tilesetW = tilesetW
+	tiles.tilesetH = tilesetH
+	-- tiles are organized by row then column
+	-- for example, tiles[12] for a 10 x 10 tileset would be the second tile on the second row
   for j = 1, tilesetH/tileH do
 		for i = 1, tilesetW/tileW do
 			tiles[count]={}
