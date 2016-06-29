@@ -3,13 +3,15 @@
 -- load assets
 --local tiles1 = require "tileset"
 local tileset = require "tileset"
+local tiles = {}
+tiles = tileset.load()
 -- load shader
 function love.load()
 	--camera = Camera(0, 0)
 
 	--tileset initialization
-	local tiles = {}
-	tiles = tileset.load()
+
+
 	tileTable = {
 	{1,2,3,45,23,78,23,54,65,32},
 	{4,5,6},
@@ -20,10 +22,10 @@ function love.load()
 	}
 
 	shader = love.graphics.newShader("shaders/selected.frag")
-	shader:send("quadW", tileW)
-	shader:send("quadH", tileH)
-	shader:send("tilesetW", tilesetW)
-	shader:send("tilesetH", tilesetH)
+	shader:send("quadW", tiles["tileW"])
+	shader:send("quadH", tiles["tileH"])
+	shader:send("tilesetW", tiles["tilesetW"])
+	shader:send("tilesetH", tiles["tilesetH"])
 	time = 0
 	time0 = 1
 	offset = 0.2
@@ -62,9 +64,9 @@ function love.draw()
 		local row = tileTable[rowIndex]
 		for columnIndex=1, #row do
 			local number = row[columnIndex]
-			shader:send("quadX", tiles[number][2])
-			shader:send("quadY", tiles[number][3])
-			love.graphics.draw(Tileset, tiles[number][1], (columnIndex-1)*tileW, (rowIndex-1)*tileH)
+			shader:send("quadX", tiles[number]["x"])
+			shader:send("quadY", tiles[number]["y"])
+			love.graphics.draw(tileset["image"], tiles[number]["quad"], (columnIndex-1)*tiles["tileW"], (rowIndex-1)*tiles["tileH"])
 		end
 	end
 	love.graphics.setShader()
