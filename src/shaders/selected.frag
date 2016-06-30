@@ -11,9 +11,10 @@ vec4 effect( vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords 
   else if(pixel == vec4(1.0,0.0,1.0,1.0)){
   vec2 quadCenter = vec2(0.5,0.5);
   vec2 quadDistance = (quad_coords - quadCenter);
-  number green = 0.7 - length(quadDistance);
-  number red = 0.7- length(quadDistance);
-  pixel = vec4(red,green,0.0,0.8 * (dt));
+  number green = 0.6 - length(quadDistance);
+  number red = 0.4 - length(quadDistance);
+  number blue = 0.2 - length(quadDistance);
+  pixel = vec4(red,green,blue, 0.4 + 0.3*(sin(dt*2.5)));
     return pixel;
   }
   else{
