@@ -14,7 +14,7 @@ vec4 effect( vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords 
   number green = 0.6 - length(quadDistance);
   number red = 0.4 - length(quadDistance);
   number blue = 0.2 - length(quadDistance);
-  pixel = vec4(red,green,blue, 0.4 + 0.3*(sin(dt*2.5)));
+  pixel = vec4(red,green,blue, 0.5 + 0.4*(sin(dt*2.5)));
     return pixel;
   }
   else{

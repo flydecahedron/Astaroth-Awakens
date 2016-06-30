@@ -2,36 +2,20 @@
 
 -- load assets
 -- initialize tileset
+local map = require("src.map")
+local tilemap = require("assets.maps.H")
 local tileset = require("src.tileset")
-local image = love.graphics.newImage("assets/tileset.png")
+local tileset_image = love.graphics.newImage("assets/tileset.png")
 local tileW, tileH = 24, 24
+
 local tiles = {}
-tiles = tileset.load(image, tileW, tileH)
--- load shader
+local shader = love.graphics.newShader("src/shaders/selected.frag")
+local units = {}
+local structures = {}
 function love.load()
-	--camera = Camera(0, 0)
-
-	--tileset initialization
-
-
-	tileTable = {
-	{1,2,3,45,23,78,23,54,65,32},
-	{4,5,6},
-	{7,8,9},
-	{1,2,3},
-	{4,5,6},
-	{7,8,9}
-	}
-
-	shader = love.graphics.newShader("src/shaders/selected.frag")
-	shader:send("quadW", tiles.tileW)
-	shader:send("quadH", tiles.tileH)
-	shader:send("tilesetW", tiles.tilesetW)
-	shader:send("tilesetH", tiles.tilesetH)
-	time = 0
-	time0 = 1
-	offset = 0.2
-	shader:send("dt",time)
+	--initialize map and tileset
+	map.load(tileset_image, tileW, tileH, tilemap)
+	--initialize shader
 end
 
 function love.keypressed(key)
@@ -42,20 +26,9 @@ function love.keypressed(key)
 end
 
 function love.update(dt)
-time = time + math.min(dt, 1/30)
-shader:send("dt",time)
+	map.update(dt, units, structures)
 end
 
 function love.draw()
-	love.graphics.setShader( shader )
-	for rowIndex = 1, #tileTable do
-		local row = tileTable[rowIndex]
-		for columnIndex = 1, #row do
-			local number = row[columnIndex]
-			shader:send("quadX", tiles[number].x)
-			shader:send("quadY", tiles[number].y)
-			love.graphics.draw(tileset.image, tiles[number].quad, (columnIndex-1)*tiles.tileW, (rowIndex-1)*tiles.tileH)
-		end
-	end
-	love.graphics.setShader()
+	map.tilemap_draw(shader)
 end
