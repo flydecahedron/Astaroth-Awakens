@@ -1,10 +1,12 @@
 -- load libs
 
 -- load assets
---local tiles1 = require "tileset"
-local tileset = require "tileset"
+-- initialize tileset
+local tileset = require("src.tileset")
+local image = love.graphics.newImage("assets/tileset.png")
+local tileW, tileH = 24, 24
 local tiles = {}
-tiles = tileset.load()
+tiles = tileset.load(image, tileW, tileH)
 -- load shader
 function love.load()
 	--camera = Camera(0, 0)
@@ -21,11 +23,11 @@ function love.load()
 	{7,8,9}
 	}
 
-	shader = love.graphics.newShader("shaders/selected.frag")
-	shader:send("quadW", tiles["tileW"])
-	shader:send("quadH", tiles["tileH"])
-	shader:send("tilesetW", tiles["tilesetW"])
-	shader:send("tilesetH", tiles["tilesetH"])
+	shader = love.graphics.newShader("src/shaders/selected.frag")
+	shader:send("quadW", tiles.tileW)
+	shader:send("quadH", tiles.tileH)
+	shader:send("tilesetW", tiles.tilesetW)
+	shader:send("tilesetH", tiles.tilesetH)
 	time = 0
 	time0 = 1
 	offset = 0.2
@@ -40,33 +42,19 @@ function love.keypressed(key)
 end
 
 function love.update(dt)
-	time = time + math.min(dt, 1/30)
-	if(time > 0 and time < 1)then
-		shader:send("dt",time)
-	elseif(time > 1)then
-		if(time0 > 0)then
-			time0 = time0 - math.min(dt, 1/30)
-			shader:send("dt",time0)
-		else
-		    time = 0
-		    time0 = 1
-			shader:send("dt",time)
-		end
-	end
+time = time + math.min(dt, 1/30)
+shader:send("dt",time)
 end
 
 function love.draw()
-	love.graphics.setColor(255, 255, 255, 255)
-	love.graphics.print(time,200,200)
-	love.graphics.print(time0,200,250)
 	love.graphics.setShader( shader )
 	for rowIndex = 1, #tileTable do
 		local row = tileTable[rowIndex]
-		for columnIndex=1, #row do
+		for columnIndex = 1, #row do
 			local number = row[columnIndex]
-			shader:send("quadX", tiles[number]["x"])
-			shader:send("quadY", tiles[number]["y"])
-			love.graphics.draw(tileset["image"], tiles[number]["quad"], (columnIndex-1)*tiles["tileW"], (rowIndex-1)*tiles["tileH"])
+			shader:send("quadX", tiles[number].x)
+			shader:send("quadY", tiles[number].y)
+			love.graphics.draw(tileset.image, tiles[number].quad, (columnIndex-1)*tiles.tileW, (rowIndex-1)*tiles.tileH)
 		end
 	end
 	love.graphics.setShader()
