@@ -40,21 +40,7 @@ function love.keypressed(key)
 		love.event.quit()
 	end
 end
-function update_time(dt)
-	time = time + math.min(dt, 1/30)
-	if(time > 0 and time < 1)then
-		shader:send("dt",time)
-	elseif(time > 1)then
-		if(time0 > 0)then
-			time0 = time0 - math.min(dt, 1/30)
-			shader:send("dt",time0)
-		else
-				time = 0
-				time0 = 1
-			shader:send("dt",time)
-		end
-	end
-end
+
 function love.update(dt)
 time = time + math.min(dt, 1/30)
 shader:send("dt",time)
