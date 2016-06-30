@@ -17,9 +17,9 @@ function tileset.load(image, tileW, tileH)
   for j = 1, tilesetH/tileH do
 		for i = 1, tilesetW/tileW do
 			tiles[count]={}
-			tiles[count]["quad"] = love.graphics.newQuad((i-1)*tileW, (j-1)*tileH, tileW, tileH, tilesetW, tilesetH)
-			tiles[count]["x"] = (i-1)*tileW
-			tiles[count]["y"] = (j-1)*tileH
+			tiles[count].quad = love.graphics.newQuad((i-1)*tileW, (j-1)*tileH, tileW, tileH, tilesetW, tilesetH)
+			tiles[count].x = (i-1)*tileW
+			tiles[count].y = (j-1)*tileH
 			count = count + 1
 		end
 	end

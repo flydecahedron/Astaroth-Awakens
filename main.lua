@@ -24,10 +24,10 @@ function love.load()
 	}
 
 	shader = love.graphics.newShader("src/shaders/selected.frag")
-	shader:send("quadW", tiles["tileW"])
-	shader:send("quadH", tiles["tileH"])
-	shader:send("tilesetW", tiles["tilesetW"])
-	shader:send("tilesetH", tiles["tilesetH"])
+	shader:send("quadW", tiles.tileW)
+	shader:send("quadH", tiles.tileH)
+	shader:send("tilesetW", tiles.tilesetW)
+	shader:send("tilesetH", tiles.tilesetH)
 	time = 0
 	time0 = 1
 	offset = 0.2
@@ -40,8 +40,7 @@ function love.keypressed(key)
 		love.event.quit()
 	end
 end
-
-function love.update(dt)
+function update_time(dt)
 	time = time + math.min(dt, 1/30)
 	if(time > 0 and time < 1)then
 		shader:send("dt",time)
@@ -50,11 +49,15 @@ function love.update(dt)
 			time0 = time0 - math.min(dt, 1/30)
 			shader:send("dt",time0)
 		else
-		    time = 0
-		    time0 = 1
+				time = 0
+				time0 = 1
 			shader:send("dt",time)
 		end
 	end
+end
+function love.update(dt)
+time = time + math.min(dt, 1/30)
+shader:send("dt",time)
 end
 
 function love.draw()
@@ -63,8 +66,8 @@ function love.draw()
 		local row = tileTable[rowIndex]
 		for columnIndex = 1, #row do
 			local number = row[columnIndex]
-			shader:send("quadX", tiles[number]["x"])
-			shader:send("quadY", tiles[number]["y"])
+			shader:send("quadX", tiles[number].x)
+			shader:send("quadY", tiles[number].y)
 			love.graphics.draw(tileset.image, tiles[number].quad, (columnIndex-1)*tiles.tileW, (rowIndex-1)*tiles.tileH)
 		end
 	end
