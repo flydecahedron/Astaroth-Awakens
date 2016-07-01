@@ -1,6 +1,6 @@
 local map = {}
+map.tiles = {}
 map.tileset = require("src.tileset")
-map.tiles =  {}
 map.tilemap = {}
 map.units = {}
 map.structures = {}
