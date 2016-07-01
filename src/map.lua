@@ -28,13 +28,14 @@ function map.tilemap_draw(shader)
   shader:send("tilesetH", map.tiles.tilesetH)
   shader:send("dt",map.time)
   love.graphics.setShader( shader )
-	for rowIndex = 1, #map.tilemap do
-		local row = map.tilemap[rowIndex]
-		for columnIndex = 1, #row do
-			local index = row[columnIndex]
+  local index = 1
+	for row = 1, map.tilemap.width do
+		for column = 1, map.tilemap.height do
 			shader:send("quadX", map.tiles[index].x)
 			shader:send("quadY", map.tiles[index].y)
-			love.graphics.draw(map.tileset.image, tiles[index].quad, (columnIndex-1)*tiles.tileW, (rowIndex-1)*tiles.tileH)
+			love.graphics.draw(map.tileset.image, map.tiles[index].quad,
+        (column-1)*map.tiles.tileW, (row-1)*map.tiles.tileH)
+      index = index + 1
 		end
 	end
 	love.graphics.setShader()
