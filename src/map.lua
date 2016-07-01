@@ -21,7 +21,7 @@ function map.update(dt, units, structures)
   map.structures = structures
 end
 
-function map.tilemap_draw(shader)
+function map.tilemap_draw( shader )
   shader:send("quadW", map.tiles.tileW)
   shader:send("quadH", map.tiles.tileH)
   shader:send("tilesetW", map.tiles.tilesetW)
@@ -31,9 +31,10 @@ function map.tilemap_draw(shader)
   local index = 1
 	for row = 1, map.tilemap.width do
 		for column = 1, map.tilemap.height do
-			shader:send("quadX", map.tiles[index].x)
-			shader:send("quadY", map.tiles[index].y)
-			love.graphics.draw(map.tileset.image, map.tiles[index].quad,
+      local tile_index = map.tilemap.data[index]
+			shader:send("quadX", map.tiles[tile_index].x)
+			shader:send("quadY", map.tiles[tile_index].y)
+			love.graphics.draw(map.tileset.image, map.tiles[tile_index].quad,
         (column-1)*map.tiles.tileW, (row-1)*map.tiles.tileH)
       index = index + 1
 		end
@@ -43,13 +44,13 @@ end
 
 function map.structures_draw(shader)
   love.graphics.setShader( shader )
-	for rowIndex = 1, #tilemap do
-		local row = structures[rowIndex]
-		for columnIndex = 1, #row do
-			local index = row[columnIndex]
-			shader:send("quadX", tiles[index].x)
-			shader:send("quadY", tiles[index].y)
-			love.graphics.draw(tileset.image, tiles[index].quad, (columnIndex-1)*tiles.tileW, (rowIndex-1)*tiles.tileH)
+	for rowtile_index = 1, #tilemap do
+		local row = structures[rowtile_index]
+		for columntile_index = 1, #row do
+			local tile_index = row[columntile_index]
+			shader:send("quadX", tiles[tile_index].x)
+			shader:send("quadY", tiles[tile_index].y)
+			love.graphics.draw(tileset.image, tiles[tile_index].quad, (columntile_index-1)*tiles.tileW, (rowtile_index-1)*tiles.tileH)
 		end
 	end
 	love.graphics.setShader()
@@ -57,13 +58,13 @@ end
 
 function map.units_draw(shader)
   love.graphics.setShader( shader )
-	for rowIndex = 1, #tilemap do
-		local row = units[rowIndex]
-		for columnIndex = 1, #row do
-			local index = row[columnIndex]
-			shader:send("quadX", tiles[index].x)
-			shader:send("quadY", tiles[index].y)
-			love.graphics.draw(tileset.image, tiles[index].quad, (columnIndex-1)*tiles.tileW, (rowIndex-1)*tiles.tileH)
+	for rowtile_index = 1, #tilemap do
+		local row = units[rowtile_index]
+		for columntile_index = 1, #row do
+			local tile_index = row[columntile_index]
+			shader:send("quadX", tiles[tile_index].x)
+			shader:send("quadY", tiles[tile_index].y)
+			love.graphics.draw(tileset.image, tiles[tile_index].quad, (columntile_index-1)*tiles.tileW, (rowtile_index-1)*tiles.tileH)
 		end
 	end
 	love.graphics.setShader()
