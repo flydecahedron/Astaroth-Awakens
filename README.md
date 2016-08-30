@@ -1,2 +1,1 @@
-Astaroth_Awakens
-whoa someone is reading this!
+Was going to be an ascii graphics(with shaders) advance wars clone using LOVE2d. But decided that programming all of the game in lua was not for me even though I really enjoyed LOVE2d. I got tilemaps and custom shaders working but that's about it. 
